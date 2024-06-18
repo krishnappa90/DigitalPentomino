@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+
+<head>
+
+</head>
+
+<body>
+
+        <script src="../js/board.js"></script>
+        <script src="../js/pentomino-utility.js"></script>
+        <script src="../js/pentomino.js"></script>
+        <script>
+                let penX = new Pentomino('X');
+                let penT = new Pentomino('T');
+                let penL = new Pentomino('L');
+
+< !--Creates new board-- >
+
+                        let board = new Board([5, 7]);
+                board.writeToDocument();
+
+< !--Places pentamino X on board-- >
+
+                        let success = board.placePentomino(penX, 0, 0);
+                board.writeToDocument();
+                document.write("Success " + success + "<br>");
+
+< !--Places pentamino T on board-- >
+
+                        occupiedCells = board.placePentomino(penT, 2, 4);
+                board.writeToDocument();
+                document.write("Success " + occupiedCells + "<br>");
+
+< !--Places pentamino L on board-- >
+
+                        occupiedCells = board.placePentomino(penL, 0, 3);
+                board.writeToDocument();
+                document.write("Success " + occupiedCells + "<br>");
+
+< !--Removes pentamino T from the board-- >
+
+                        occupiedCells = board.removePentomino(penT);
+                board.writeToDocument();
+                document.write("Success " + occupiedCells + "<br>");
+
+< !--Removes pentamino X from the board-- >
+
+                        occupiedCells = board.removePentomino(penX);
+                board.writeToDocument();
+                document.write("Success " + occupiedCells + "<br>");
+
+< !--Checking for collision, returns false in following case as we try to place X on L-- >
+
+                        occupiedCells = board.placePentomino(penX, 0, 3);
+                board.writeToDocument();
+                document.write("Success " + occupiedCells + "<br>");
+
+< !--Getting a position of pentamino which is already on the board-- >
+
+                        let pentaminoPosition = board.getPosition(penL);
+                document.write("Pentamino Position: " + pentaminoPosition + "<br>");
+
+< !--Getting a position of pentamino which is not placed on the board-- >
+
+                        pentaminoPosition = board.getPosition(penT);
+                document.write("Pentamino Position: " + pentaminoPosition + "<br>");
+
+        </script>
+
+</body>
+
+</html>

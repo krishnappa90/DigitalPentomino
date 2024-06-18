@@ -1,0 +1,151 @@
+* {
+   box-sizing: border-box;
+}
+
+h1 {
+   text-align: center;
+}
+
+.outerGrid {
+   left: 1vw;
+   position: relative;
+   float: left;
+   /* padding: 0 4px; */
+}
+
+.filterGrid {
+   position: fixed;
+   top: 8vw;
+   bottom: 15vw;
+   left: 3vw;
+   width: 13vw;
+   max-width: 13vw;
+   height: 24vw;
+   overflow-x: hidden;
+}
+
+.filterGrid .fimageDiv {
+   position: relative;
+   width: 11vw;
+   /* margin-right: .1vw; */
+   margin: 1.5vw 1.2vw 1.5vw 1.2vw;
+   /* border: .2vw solid rgb(2, 71, 62);
+   border-style: solid; */
+
+}
+
+.innerGrid {
+   position: fixed;
+   top: 12vw;
+   bottom: 10vw;
+   float: left;
+   display: flex;
+   flex-wrap: wrap;
+   max-width: 80vw;
+   margin-left: 15vw;
+   /* padding: 0 4px; */
+   overflow-x: hidden;
+}
+
+.innerGrid .imageDiv {
+   position: relative;
+   float: left;
+   width: 25.5vw;
+   padding: .1vw;
+}
+
+@media screen and (max-width: 800px) {
+   .innerGrid {
+      flex: 50vw;
+      max-width: 50vw;
+   }
+}
+
+@media screen and (max-width: 600px) {
+   .innerGrid {
+      flex: 100vw;
+      max-width: 100vw;
+   }
+}
+
+.screenshot {
+   opacity: 1;
+   display: block;
+   width: 100%;
+   height: auto;
+   transition: .5s ease;
+   backface-visibility: hidden;
+   border-radius: 2vw;
+}
+
+.imageBtnDiv {
+   transition: .5s ease;
+   opacity: 0;
+   position: absolute;
+   top: 40%;
+   left: 20%;
+   align-items: center;
+ }
+
+.imageDiv:hover .screenshot {
+   opacity: 0.2;
+}
+
+.imageDiv .imageBtnDiv {
+   opacity: .5;
+}
+
+.fimageDiv:hover {
+   opacity: 0.6;
+}
+
+.imageButton {
+   color: white;
+   width: 6vw;
+   margin-left: 1vw;
+   text-align: center;
+   border-radius: .3vw;
+}
+
+.imageLoadBtn {
+   background-color: #43c08c;
+}
+
+.imageDeleteBtn {
+   background-color: #d34944;
+}
+
+.fTextDiv {
+   position: relative;
+   /* border: 1px solid green; */
+   font: bold;
+   font-family: "Times New Roman", Times, serif;
+   font-size: 20px;
+   font-style: oblique;
+   font-weight: bold;
+   margin: 1.5vw 1vw 1.5vw 1vw;
+   /* padding-right: 1vw; */
+   max-width: 10.5vw;
+   height: 6vw;
+   text-align: center;
+   align-items: center;
+   justify-content: center;
+   background-color: #eceaea;
+}
+
+.fTextDiv:active {
+   background-color: #969393;
+}
+
+.fTextDiv .fTextbutton {
+   padding-top: 2vw;
+   padding-left: 1vw;
+   height: 2vw;
+}
+
+.fTextDiv .replayBtn {
+   width: fit-content;
+   position: "center";
+   content: "Replay";
+   background-color: #afaaaa;;
+}

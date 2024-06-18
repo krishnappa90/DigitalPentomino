@@ -1,0 +1,2160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#009578">
+    <title>TUCA</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
+    <link rel="stylesheet" href="resources/css/style.css">
+    <link rel="stylesheet" id="switcher-id" href=" ">
+    <link rel="stylesheet" href="resources/css/modal.css">
+    <link rel="stylesheet" href="resources/css/load_screen.css">
+    <link rel="stylesheet" href="resources/css/grid.css">
+    <link rel="stylesheet" href="resources/css/settings_form.css">
+    <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
+    <script src="resources/js/multi-lang/strings.js"></script>
+    <script src="resources/js/themeSwitcher.js"></script>
+    <script src="resources/js/settings/settings-schema.js"></script>
+    <script src="resources/js/settings/settings.js"></script>
+    <script src="resources/js/settings/settings-parser.js"></script>
+    <script src="resources/js/settings/settings-form.js"></script>
+    <script src="resources/js/settings/settings-visibility.js"></script>
+    <script src="resources/js/settings/custom-settings-entry/custom-settings-entry.js"></script>
+    <script src="resources/js/settings/custom-settings-entry/start-pos-settings-entry.js"></script>
+    <script src="resources/js/settings/custom-settings-entry/custom-settings-entry-master.js"></script>
+    <script src="resources/index.js"></script>
+    <script src="resources/js/ui-template.js"></script>
+    <script src="resources/js/board.js"></script>
+    <script src="resources/js/visual.js"></script>
+    <script src="resources/js/overlapping.js"></script>
+    <script src="resources/js/pentomino.js"></script>
+    <script src="resources/js/game-controller.js"></script>
+    <script src="resources/js/game-loader.js"></script>
+    <script src="resources/js/game.js"></script>
+    <script src="resources/js/command-history/command-node.js"></script>
+    <script src="resources/js/command-history/commands.js"></script>
+    <script src="resources/js/command-history/command-manager.js"></script>
+    <script src="resources/js/command-history/command-tree.js"></script>
+    <script src="resources/js/configs/baseConfigs.js"></script>
+    <script src="resources/js/configs/licensesConfig.js"></script>
+    <script src="resources/js/configs/solutionsConfig.js"></script>
+    <script src="resources/js/game-solution.js"></script>
+    <script src="resources/js/pd.js"></script>
+    <script src="resources/js/handleMobile.js"></script>
+    <script type="text/javascript" src="resources/jsonform/jquery.min.js"></script>
+    <script type="text/javascript" src="resources/jsonform/underscore.js"></script>
+    <script type="text/javascript" src="resources/jsonform/jsv.js"></script>
+    <script type="text/javascript" src="resources/jsonform/html2canvas.js"></script>
+    <script type="text/javascript" src="resources/jsonform/loadash.js"></script>
+    <script type="text/javascript" src="resources/jsonform/jquery.qrcode.min.js"></script>
+    <script type="text/javascript" src="resources/jsonform/qr-scanner.umd.min.js"></script>
+    <script type="text/javascript" src="resources/js/util.js"></script>
+    <script src="resources/js/hint.js"></script>
+    <script src="resources/js/hint-ai.js"></script>
+    <script src="resources/js/help/hinting/command-sequence-list.js"></script>
+    <script src="resources/js/load_screen.js"></script>
+    <script src="resources/js/split-board.js"></script>
+    <script src="resources/js/help.js"></script>
+</head>
+<!-- Preloader section -->
+<div class="preloader d-flex">
+    <div class="tuca">
+        <img src="resources/images/icons/tuca.png" type="image/svg+xml" />
+    </div>
+    <div class="sk-cube-grid">
+        <img src="resources/images/icons/loader.gif" />
+    </div>
+</div>
+
+<body onload="touchStartup(); initialize(); buttonManipulation();" class="page">
+    <audio id="audioTukaScream" src="resources/audio/tuka-scream.mp3"></audio>
+    <audio id="bgMusic" src="resources/audio/chee-zee-beach-by-kevin-macleod-from-filmmusic-io.mp3" loop></audio>
+    <canvas id="canvas" width="auto" height="auto"></canvas>
+    <div id="seedingCover"></div>
+    <div id="seeding" class="seed">
+        <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
+        <button type="button" id='seedSubmit' class="cActionBtn" onclick="submitSeed()"><img class="cSeedBtn"
+                src="resources/images/icons/seed.png">
+    </div>
+    <div class="cGame">
+        <div id="game">
+            <div id="tray"></div> <!-- tray -->
+            <div id="playarea" class="FlashOff">
+                <div id="field"></div> <!-- field -->
+                <div id="piecearea"></div> <!-- piecearea -->
+            </div>
+            <div id="modalTop" class="modal">
+                <button onclick="closeModal()" class="close" title="Close Modal"><img class="closeBtn"
+                        src="resources/images/icons/close.png"></button>
+                <button id="backButton" class="back" style="display:none"><img class="backBtn"
+                        src="resources/images/icons/back.png"></button>
+                <div class="modalContainer" id="modalContainerID">
+                    <div class="outerGrid">
+                        <div class="filterGrid" id="filterGrid"></div>
+                        <div class="innerGrid" id="innerGrid"></div>
+                        <form id="innerGridForm"></form>
+                    </div>
+                    <form class="modalFullframeContainer" id="modalFullframeContainerID"></form>
+                    <form class="modalFormContent">
+                        <div class="modalFormContainer" id="modalFormContainerID">
+                            <h3 id="modalTitleID"></h3>
+                            <div class="modalButtons" id="modalButtonsID"></div>
+                            <div class="modalBody" id="modalBodyID"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--modal end-->
+
+            <div id="functions_navbar" class="nav" onclick="hideManipulationButtons">
+                <button type="button" id='btnSettingsForm' class="cActionBtn" onclick="selectSettings()">
+                    <img src="resources/images/icons/settings_v2.png">
+                </button>
+                <button type="button" id='btnBoardSelect' class="cActionBtn" onclick="selectBoard()"> <img
+                        src="resources/images/icons/board_v2.png">
+                </button>
+                <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled>
+                    <img src="resources/images/icons/prefill.png">
+                </button>
+                <button type="button" id='qrCodeButton' class="cActionBtn" onclick="clickedOnScanQrCode()">
+                    <img src="resources/images/icons/qr-code.png">
+                </button>
+                <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img
+                        src="resources/images/icons/help_v2.png">
+                </button>
+                <button type="button" id='undo' class="cActionBtn" onclick="execUndo()">
+                    <img src="resources/images/icons/undo_v2.png">
+                </button>
+                <button type="button" id='redo' class="cActionBtn" onclick="execRedo()"><img
+                        src="resources/images/icons/redo_v2.png">
+                </button>
+                <button type="button" id='screenshot' class="cActionBtn" onclick="saveGameImage()">
+                    <img src="resources/images/icons/screenshot_v2.png">
+                </button>
+                <button type="button" id='gallery' class="cActionBtn" onclick="showGameImages()">
+                    <img src="resources/images/icons/gallery_v2.png">
+                </button>
+                <button type="button" id='replay' class="cActionBtn" onclick="showReplayUI()">
+                    <img src="resources/images/icons/replay.svg">
+                </button>
+                <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
+                    <img src="resources/images/icons/tidy_up_v2.png"></button>
+                <button type="button" for='file' class="cActionBtn" onclick="importfile()">
+                    <img id="importimg" src="resources/images/icons/import.png">
+                    <input id="file" type="file" name="name" style="display:none;" />
+                </button>
+                <button type=" button" id='exportfile' class="cActionBtn" onclick="exportfile()">
+                    <img id="exportimg" src="resources/images/icons/export.png">
+                </button>
+                <button type="button" id='splitBoard' class="cActionBtn" onclick="splitTheBoard()">
+                    <img id="splitBoardimg" src="resources/images/icons/split.png"></button>
+            </div>
+
+            <div id="labelNumberSolutionsContainer">
+                <div id="labelNumberSolutionsContainerChild">
+                    <div id="labelNumberSolutions">Number of solutions: ?</div>
+                </div>
+            </div>
+            <div id="bubbleContainer">
+                <div class="speechBubble">
+                    <div id="speechBubbleText">Number of solutions: ?</div>
+                </div>
+            </div>
+            <div id="birdContainer">
+                <img src="resources/images/icons/tuca_bird_left.png"></img>
+            </div>
+
+        </div>
+        <div class="main-wrapper" id="pieceManipulation">
+            <div class="buttonWrapper first">
+                <div class="buttonInside first" id="insideWrapperFirst" onclick="flipH()">
+                    <span class="icon-flip1" id="OpflipH"></span>
+                </div>
+            </div>
+            <div class="buttonWrapper second">
+                <div class="buttonInside second" id="insideWrapperSecond" onclick="rotateAntiClkWise()">
+                    <span class="icon-rotateLeft" id="OpRotateLeft"></span>
+                </div>
+            </div>
+            <div class="buttonWrapper third">
+                <div class="buttonInside third" id="insideWrapperThird" onclick="rotateClkWise()">
+                    <span class="icon-rotateRight" id="OpRotateRight"></span>
+                </div>
+            </div>
+            <div class="buttonWrapper fourth">
+                <div class="buttonInside fourth" id="insideWrapperFourth" onclick="flipV()">
+                    <span class="icon-flip2" id="OpflipV"></span>
+                </div>
+            </div>
+        </div>
+        <!---Button Manipulation Ends-->
+    </div>
+
+    <script type="text/javascript">
+        let pd;
+        let template;
+        let qrScanner = null;
+
+        const SnapshotType = {
+            "FilterOnly": 0,
+            "Original": 1,
+            "Auto": 1 << 1,
+            "Original_Auto": (1 | (1 << 1)),
+            "Undefined": (1 & (1 << 1))
+        }
+        Object.freeze(SnapshotType);
+
+        function initialize() {
+            pd = new PD();
+            template = new Template();
+
+            let settings = SettingsSingleton.getInstance().getSettings();
+            let initialChanges = SettingsParser.compareSettings(
+                SettingsSchemaSingleton.getInstance().getSettingsSchema(),
+                settings,
+                null);
+            let boards = pd.visual.getBoards();
+            if (boards.length == 0) {
+                loadBoardList();
+            }
+            processChangesToSettings(initialChanges, settings);
+            //inactivityTime(); checks if the user is active or not
+            inactivityTime();
+            let import_data = localStorage.getItem('IMPORT_FILE');
+            if (import_data.length > 0)
+                pd.importfile();
+        }
+
+        function importfile() {
+            let input = document.createElement('input');
+            input.type = 'file';
+            input.onchange = _ => {
+                // you can use this method to get file and perform respective operations
+                let files = Array.from(input.files);
+                var file = files[0];
+                var reader = new FileReader();
+                reader.onload = function (progressEvent) {
+                    localStorage.setItem('IMPORT_FILE', this.result);
+                    pd.importfile();
+                    console.log(this.result);
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+            this.closeBoardSelector();
+            this.closeSettings();
+        }
+
+        function exportfile() {
+            pd.exportfile();
+            this.closeBoardSelector();
+            this.closeSettings();
+        }
+
+
+        function inactivityTime() {
+            let time;
+            let text;
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let speechBubbleText = document.getElementById('speechBubbleText');
+            // initializing the resetTime function to the events in the DOM
+            /**
+            additional event listeners used in the future can be set to resetTime , in a similar way done below
+            **/
+            window.onload = resetTime;
+            window.onclick = resetTime;
+            window.onkeypress = resetTime;
+            window.ontouchstart = resetTime;
+            window.onmousemove = resetTime;
+            window.onmousedown = resetTime;
+            window.addEventListener('scroll', resetTime, true);
+            //alert user if not active
+            function alertUser() {
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+                // do tasks
+                //this loop initiates actions if user inactive, this can be configurable from the settings
+                //Series of actions are : bubble speech message, and onmouse move the application says welcome back
+                //then simultaneously bird animation starts and then ends
+                if (SettingsSingleton.getInstance().getSettings().general.initiateActionsIfUserNotActive) {
+                    //speech bubble message : "hello There"
+                    setTimeout(function () {
+                        speechBubbleText.textContent = strings.speechbubbleTexts.helloThere[lang];
+                        //check if speech is enabled
+                        if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                            pd.visual.speakBot(strings.speechbubbleTexts.helloThere[lang]);
+                        }
+
+                        //check if TUCA bird is enabled
+                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                            document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.helloThere[lang];
+                            //check if speech is enabled
+                            if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                                pd.visual.speakBot(strings.speechbubbleTexts.helloThere[lang]);
+                            }
+                        }
+                    }, 500);
+
+                    //speak: i have a hint
+                    if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                        pd.visual.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+                    }
+                    //detect user if active again => onmouse move it says welcome back and the bird animation starts
+                    document.onmousemove = function () {
+                        //if(speech bubble message : "hello There ? ") => display "welcome back"
+                        if (speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]) {
+                            setTimeout(function () {
+                                speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang];
+                            }, 2000);
+                            //check if bird is enabled
+                            if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                                document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.welcomeBack[lang];
+                            }
+                            //check if autohinting enabled continue with autoHint() function
+                            if (SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting) {
+                                if (SettingsSingleton.getInstance().getSettings().autohinting.timebased) {
+                                    autoHint();
+                                }
+                            }
+                        }
+                        //start bird animation
+                        setTimeout(function () {
+                            document.getElementById('birdContainer').classList.add("anim");
+                        }, 2000);
+                    };
+
+                    //TODO : handle remove event listener mouse move and make execution once :
+                    //In-order to insert the speech bot functionality inside mouse move
+
+
+                    //at the end remove the bird animation
+                    setTimeout(function () {
+                        document.getElementById('birdContainer').classList.remove("anim");
+                    }, 10000);
+                }
+
+                //else if autohinting disabled
+                //warning: in case of show number of solutions from settings is disabled, this case is not handled Here
+                //please ensure this case works fine in the future
+                else {
+                    setTimeout(function () {
+                        speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
+                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                            document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
+                        }
+                    }, 5000);
+                }
+            }
+            //end of alert user
+            //reset timer for every event in the DOM
+            // Initialise the setTimeout and then
+            //clear timeout to check user activity on the application
+            function resetTime() {
+                clearTimeout(time);
+                time = setTimeout(alertUser, 1000 * userInactiveWaitTime()); // 10 seconds
+            }
+        }
+
+        //end of inactivityTime() function
+
+
+
+        //Function gives time delay to wait for user inactivityTime
+        function userInactiveWaitTime() {
+            //option from settings menu to set the time
+            let userInactiveWaitTime = SettingsSingleton.getInstance().getSettings().autohinting.timeForNoAction;
+            let time = 0;
+            switch (userInactiveWaitTime) {
+                case "Short":
+                    // code block
+                    time = 30;
+                    break;
+                case "Medium":
+                    // code block
+                    time = 90;
+                    break;
+                case "Long":
+                    // code block
+                    time = 150;
+                    break;
+                default:
+                    // code block
+                    console.error("time unknown!");
+            }
+            return time;
+        }
+
+        //runs if autohint is enabled (this function specific for time period based)
+        //Time period based hinting is only enabled in case the user is far away from the final solution
+        function autoHint() {
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let speechBubbleText = document.getElementById('speechBubbleText');
+            wrongActions = false;
+            timeperiod = true;
+            //let x = window.matchMedia("(max-width: 860px)");
+            //check if user is towards the solution or not
+            //in case if the user is towards the final solution  , the message "Please continue with the game" appears
+            //this option can be configurable from the settings
+            if (!(SettingsSingleton.getInstance().getSettings().autohinting.enableTimePeriodBasedAutoHintInAnyCase)) {
+                if ((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length / 2))) {
+                    setTimeout(function () {
+                        speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
+                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                            document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
+                        }
+                    }, 5000);
+                    //pd.visual.numberofPlacedPentominos();
+                    return;
+                }
+            }
+            //check if time period based autohint is set or not
+            //in case if the time period is not selected  , the message "Please continue with the game" appears
+            if (!(SettingsSingleton.getInstance().getSettings().autohinting.timebased)) {
+                setTimeout(function () {
+                    speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
+                    if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                        document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
+                    }
+                }, 2500);
+                return;
+            } else {
+                pd.visual.configureAutoHints();
+            }
+        }
+
+
+
+        function buttonManipulation() {
+            let btn = document.querySelector('.mainWrapper');
+            let buttonWrapper = document.querySelectorAll('.buttonWrapper');
+
+            if (btn) {
+                btn.addEventListener('click', function () {
+
+                    if (btn.classList.contains('animation')) {
+                        btn.classList.remove('animation');
+                    } else {
+                        btn.classList.add('animation');
+                    }
+
+                    for (i = 0; i < buttonWrapper.length; i++) {
+                        if (buttonWrapper[i].classList.contains('animation')) {
+                            buttonWrapper[i].classList.remove('animation');
+                        } else {
+                            buttonWrapper[i].classList.add('animation');
+                        }
+                    }
+                });
+            }
+
+        }
+
+        function loadBoardList() {
+            var board_list = pd.getAllBoards();
+            for (var i = 0; i < board_list.length; i++) {
+                pd.loadBoard(board_list[i]);
+                let boardName = board_list[i];
+                let boardHtml = document.getElementById("playarea");
+                const options = {
+                    backgroundColor: 'darkgrey'
+                };
+                html2canvas(boardHtml, options).then(function (board) {
+                    board.value = boardName;
+                    board.style.width = '25vw';
+                    board.style.height = '15vw';
+                    board.style.border = "2px solid black";
+                    pd.visual.saveBoard(board);
+                });
+            }
+        }
+        function selectBoard() {
+            var modal = document.getElementById('modalTop');
+            this.disableSnapshotButton();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
+            this.hideManipulationButtons();
+            modal.style.background = " lightgrey";
+            modal.style.display = "block";
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".outerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            // document.querySelector(".modalContainer").style.display = "none";
+            let imageGrid = document.getElementById('innerGrid');
+            let imgFilterGrid = document.getElementById('filterGrid');
+            let innerGridTop = imageGrid.style.getPropertyValue('top');
+            let innerGridBottom = imageGrid.style.getPropertyValue('bottom');
+            let innerGridMarginLeft = imageGrid.style.getPropertyValue('margin-left');
+            imageGrid.style.display = "block";
+            imageGrid.style.marginLeft = "14vw";
+            imageGrid.style.top = "9vw";
+            imageGrid.style.bottom = "10vw";
+
+
+            if (document.getElementById('filterGrid')) {
+                if (document.getElementById('filterGrid').style.display = "none" && (document.getElementById('modalContainerID').style.display = "block")) {
+                    document.getElementById('innerGrid').style.marginLeft = "10vw";
+                }
+                else if (document.getElementById('filterGrid').style.display = "block") {
+                    document.getElementById('innerGrid').style.marginLeft = "10vw";
+                }
+            }
+
+
+
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+            let boards = pd.visual.getBoards();
+            if (boards == undefined || boards.length == 0) {
+                console.error("No board generated");
+                return;
+            }
+            boards.forEach((board) => {
+                let imageDiv = document.createElement("div");
+                imageDiv.setAttribute("class", "imageDiv");
+                imageDiv.appendChild(board);
+                imageGrid.appendChild(imageDiv);
+
+                imageDiv.addEventListener('click', function () {
+                    let bName = board.value;
+                    imageGrid.style.top = innerGridTop;
+                    imageGrid.style.bottom = innerGridBottom;
+                    imageGrid.style.marginLeft = innerGridMarginLeft;
+                    loadBoard(bName);
+                }, false);
+
+            });
+
+        }
+
+        function clickedOnScanQrCode() {
+            let modal = document.getElementById('modalTop');
+
+            if ($(modal).is(':visible')) {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
+                this.closeModal();
+            } else if (SettingsSingleton.getInstance().getSettings().teachersMode) {
+                // teacher has the choice between share and scan
+                openImportOrExportDialog();
+                UtilitiesClass.disablePointerEventsOnModalOpen();
+                this.hideManipulationButtons();
+                if ($('#birdContainer').is(':visible')) {
+                    this.hideBubbleContainer();
+                }
+            } else {
+                // pupils can only scan
+                openScanQrCode();
+                UtilitiesClass.disablePointerEventsOnModalOpen();
+                this.hideManipulationButtons();
+                if ($('#birdContainer').is(':visible')) {
+                    this.hideBubbleContainer();
+                }
+            }
+            //TODO : THIS IS A QUICK FIX,
+            // handle the bug dynamically.
+            $("#btnBoardSelect").click(function () {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
+            });
+            //gallery
+            $("#gallery").click(function () {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
+            });
+        }
+
+        function openImportOrExportDialog() {
+            let modal = document.getElementById('modalTop');
+            var x = window.matchMedia("(max-width: 1092px)");
+            var y = window.matchMedia("(max-width: 1200px)");
+            var z = window.matchMedia("(max-width: 490px)");
+            var p = window.matchMedia("(max-width: 1010px)");
+            modal.style.display = "block";
+            modal.style.background = "#eceaea";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+            template.clearContent(".modalFullframeContainer");
+
+            //hide back button for main settings menu
+            document.getElementById("backButton").style.display = "none";
+
+            UtilitiesClass.disablePointerEventsOnModalOpen();
+            this.hideManipulationButtons();
+            this.hideBubbleContainer();
+
+            $(".close").click(function () {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
+            });
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let parent = modal;
+
+            let heading = document.createElement("h1");
+            let div = document.createElement("div");
+            let scanDiv = document.createElement("div");
+            scanDiv.id = "scanDiv";
+            let shareDiv = document.createElement("div");
+            shareDiv.id = "shareDiv";
+            div.id = "shareOrScandiv";
+            div.style.textAlign = "center";
+            div.style.display = "flex";
+            shareDiv.display = "flex";
+            heading.id = "shareOrScan";
+            heading.innerHTML = strings.qrCode.scanOrShare[lang];
+            heading.style.textAlign = "center";
+            parent.appendChild(heading);
+
+            // Add scan / share buttons
+            let scanImgElement = SettingsForm.createImg("scanImg", "resources/images/icons/scan_qr_code.png");
+            scanImgElement.id = "scanImgElement";
+            scanImgElement.style.marginLeft = "8vw";
+            if (y.matches) {//if media query matches ==>  width : 1200 px
+                scanImgElement.style.marginLeft = "auto";
+            }
+            if (z.matches) {  // media query ==>  width :  490px
+                scanImgElement.style.width = "50%";
+            }
+            if (p.matches) {
+                div.style.display = "block";
+            }
+            scanImgElement.onclick = () => openScanQrCode();
+            let shareImgElement = SettingsForm.createImg("shareImg", "resources/images/icons/share_qr_code.png");
+            shareImgElement.id = "shareImgElement";
+            if (z.matches) {  // media query ==>  width :  490px
+                shareImgElement.style.width = "50%";
+            }
+            if (x.matches) { //if media query matches  ==>  width : 1092px
+                //shareDiv.style.width = "40%";
+                shareDiv.style.textAlign = "center";
+                shareDiv.display = "none";
+                //div.style.display="block";
+                scanDiv.style.textAlign = "center";
+            }
+            shareImgElement.onclick = () => handleShareSettings();
+
+            scanDiv.appendChild(scanImgElement);
+            shareDiv.appendChild(shareImgElement);
+            div.appendChild(scanDiv);
+            div.appendChild(shareDiv);
+            parent.appendChild(div);
+        }
+
+        function showCameraUnavailable() {
+            let modal = document.getElementById('modalTop');
+            let scan = $("#scanImgElement");
+            let share = $("#shareImgElement");
+            let shareScanHeading = $("#shareOrScan");
+            share.css("display", "none");
+            scan.css("display", "none");
+            shareScanHeading.css("display", "none");
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+
+            this.hideBubbleContainer();
+            this.disableSnapshotButton();
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textNode = {
+                class: "modalText",
+                text: strings.general.showCameraUnavailable[lang]
+            };
+            template.attachText("#modalTitleID", textNode);
+
+            let okBtn = {
+                class: "deleteBtn",
+                onclick: "closeModalContainer()",
+                textContent: strings.general.ok[lang]
+            };
+
+            template.attachBtn("#modalButtonsID", okBtn);
+
+            let okButton = document.querySelector(".okBtn");
+            okButton.addEventListener("click", () => {
+                this.closeModal();
+            });
+            $("#bubbleContainer").css("display", "block");
+        }
+
+        function handleShareSettings() {
+            let modal = document.getElementById('modalTop');
+
+            this.hideBubbleContainer();
+            this.disableSnapshotButton();
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            $("#shareOrScan").remove();
+            $("#scanImgElement").remove();
+            $("#shareImgElement").remove();
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let parent = document.getElementById("modalBodyID");
+
+            let t1 = document.createTextNode(strings.qrCode.share.shareQrCode[lang]);
+            let h5 = document.createElement("h2");
+            let div1 = document.createElement("div");
+            h5.appendChild(t1);
+            div1.appendChild(h5);
+            parent.appendChild(div1);
+
+            let settings = SettingsSingleton.getInstance().getSettings();
+
+            //show back button
+            let btn = document.getElementById("backButton");
+            btn.style.display = "block";
+            btn.onclick = function () {
+                openImportOrExportDialog();
+                btn.style.display = "none";
+            };
+
+            let qrCodeElement = document.createElement("div");
+            qrCodeElement.style.margin = "auto";
+            parent.appendChild(qrCodeElement);
+
+            parent.appendChild(document.createElement("br"));
+            parent.appendChild(document.createTextNode(strings.qrCode.share.useThisQrCodeFirstPart[lang]));
+            let qrButtonImg = document.createElement("img");
+
+            qrButtonImg.src = "resources/images/icons/qr-code.png";
+            qrButtonImg.style.width = "2vw";
+            qrButtonImg.style.height = "2vw";
+            parent.appendChild(qrButtonImg);
+            parent.appendChild(document.createTextNode(strings.qrCode.share.useThisQrCodeSecondPart[lang] + " "));
+            parent.appendChild(document.createElement("br"));
+
+            let printButton = createPrintButton(qrCodeElement);
+            parent.appendChild(printButton);
+            parent.appendChild(document.createTextNode(" " + strings.general.or[lang] + " "));
+            let downloadImageButton = createDownloadImageLink();
+            parent.appendChild(downloadImageButton);
+
+            let collapsibleButton = SettingsForm.createCollapsibleButton(
+                strings.settings.advanced.show[lang],
+                strings.settings.advanced.hide[lang]);
+            let divToHide = document.createElement("div");
+            divToHide.style.display = "none";
+
+            parent.appendChild(collapsibleButton);
+            parent.appendChild(divToHide);
+            let urlElement = document.createElement("a");
+            urlElement.target = "_blank";
+            // Security measure: https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types/noopener
+            urlElement.rel = "noopener noreferrer";
+            addAdvancedShareOptions(divToHide, qrCodeElement, urlElement, downloadImageButton);
+
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
+            let exportSeed = seed.substr(1, seed.length - 1);
+            exportSeed = 2 + exportSeed;
+            console.info("baseConfigs.url", baseConfigs.url);
+            updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+        }
+
+        function addAdvancedShareOptions(advOptionsRoot, qrCodeElement, urlElement, downloadImageButton) {
+            advOptionsRoot.appendChild(document.createElement("br"));
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let p = document.createElement("p");
+            let descrLabel = document.createElement("label");
+            descrLabel.innerText = strings.qrCode.share.urlToTest[lang] + ": ";
+            p.appendChild(descrLabel);
+            p.appendChild(urlElement);
+            let copyUrlButton = SettingsForm.createButton(strings.qrCode.share.copyUrl[lang]);
+            copyUrlButton.addEventListener("click", (event) => {
+                navigator.clipboard.writeText(urlElement.innerText);
+            });
+            p.appendChild(copyUrlButton);
+            advOptionsRoot.appendChild(p);
+
+            let includePiecesLabel = SettingsForm.createLabel(
+                strings.settings.boardCustomization.includePiecePos.title[lang]);
+            advOptionsRoot.appendChild(includePiecesLabel);
+
+            let teacherModeCheckbox = SettingsForm.createSelectElement(
+                "teacherModeCheckbox",
+                ["shareWithClass", "shareWithTeachers"],
+                [strings.qrCode.share.pupilMode[lang], strings.qrCode.share.teachersMode[lang]]);
+
+            teacherModeCheckbox.onchange = () => {
+                handleClickedOnTeacherModeCheckbox(teacherModeCheckbox, qrCodeElement, urlElement, downloadImageButton);
+            };
+            handleClickedOnTeacherModeCheckbox(teacherModeCheckbox, qrCodeElement, urlElement, downloadImageButton);
+
+            let includePiecesCheckbox = SettingsForm.createInputElement("checkbox", "includePiecesCheckBox");
+            includePiecesCheckbox.onchange = () => {
+                handleClickedOnIncludePiecesCheckbox(includePiecesCheckbox, teacherModeCheckbox,
+                    qrCodeElement, urlElement, downloadImageButton);
+            };
+            includePiecesCheckbox.checked = SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos;
+            handleClickedOnIncludePiecesCheckbox(includePiecesCheckbox, teacherModeCheckbox,
+                qrCodeElement, urlElement, downloadImageButton);
+
+            advOptionsRoot.appendChild(includePiecesCheckbox);
+            advOptionsRoot.appendChild(teacherModeCheckbox);
+
+            advOptionsRoot.appendChild(document.createElement("br"));
+        }
+
+        function handleClickedOnTeacherModeCheckbox(teacherModeCheckbox,
+            qrCodeElement, urlElement, downloadImageButton) {
+            let settings = SettingsSingleton.getInstance().getSettings();
+            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+            let exportSeed = seed.substr(1, seed.length - 1);
+            exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
+
+            updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+        }
+
+        function handleClickedOnIncludePiecesCheckbox(includePiecesCheckbox, teacherModeCheckbox,
+            qrCodeElement, urlElement, downloadImageButton) {
+            let checkboxValue = includePiecesCheckbox.checked;
+            let settings = SettingsSingleton.getInstance().getSettings();
+            settings.boardCustomization.includePiecePos = checkboxValue;
+
+            let game = new FrontController().controller.game();
+            let customSettingsEntry = CustomSettingsEntrySingleton.getInstance()
+                .get("boardCustomization", "initialPiecePos");
+            let piecePosSeedEntry = customSettingsEntry.parseFromGameToSeed(game);
+            settings.boardCustomization.initialPiecePos = piecePosSeedEntry;
+
+            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+            let exportSeed = seed.substr(1, seed.length - 1);
+            exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
+
+            updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+        }
+
+        function updateShareOptions(qrCodeElement, urlElement, downloadImageButton, seed) {
+            let url = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
+            //let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(1, seed.length);
+
+            urlElement.innerText = url;
+            urlElement.href = url;
+
+            generateQrCode(qrCodeElement, url);
+
+            downloadImageButton.onclick = () => {
+                let dt = qrCodeElement.firstElementChild.toDataURL('image/png');
+                download(dt);
+            };
+        }
+
+        function createDownloadImageLink() {
+            let downloadImageButton = document.createElement("input");
+            downloadImageButton.type = "button";
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            downloadImageButton.value = strings.qrCode.share.downloadImage[lang];
+            return downloadImageButton;
+        }
+
+        function download(file) {
+
+            //creating an invisible element
+            let element = document.createElement('a');
+            element.setAttribute('href', file);
+            element.setAttribute("download", "qr_code.png");
+
+            // Above code is equivalent to
+            // <a href="path of file" download="file name">
+
+            document.body.appendChild(element);
+
+            //onClick property
+            element.click();
+
+            document.body.removeChild(element);
+        }
+
+        function createPrintButton(qrCodeElement) {
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let printButton = SettingsForm.createButton(strings.qrCode.share.print[lang]);
+            printButton.setAttribute("id", "printQRCode");
+            printButton.addEventListener("click", function () {
+                let canvas = qrCodeElement.firstElementChild;
+                let imgDataUrl = canvas.toDataURL('image/png');
+                printInNewWindow(imgDataUrl);
+            });
+            return printButton;
+        }
+
+        // from https://stackoverflow.com/questions/18542081/how-to-open-an-image-and-have-it-print
+        function printInNewWindow(imgDataUrl) {
+            let win = window.open('');
+            let img = win.document.createElement("img");
+            img.src = imgDataUrl;
+            win.document.body.appendChild(img);
+            img.onload = function () {
+                win.print();
+            };
+        }
+
+        function openScanQrCode() {
+            let modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "#eceaea";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
+            template.clearContent("#innerGridForm");
+
+            QrScanner.hasCamera().then((hasCamera) => {
+                if (hasCamera) {
+                    openScanQrFunctionality();
+                } else {
+                    handleCameraNotFoundError();
+                }
+            });
+        }
+
+        function handleCameraNotFoundError() {
+            console.info("handle camera not found");
+            showCameraUnavailable();
+        }
+
+        function openScanQrFunctionality() {
+            console.info("browser has camera");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let parent = $('#innerGridForm')[0];
+
+            let heading = document.createElement("h4");
+            heading.innerHTML = strings.qrCode.scan.scanQrCode[lang];
+            parent.appendChild(heading);
+
+            let videoElement = parent.appendChild(document.createElement("video"));
+            videoElement.id = "webCamera";
+            videoElement.style.display = "none";
+            parent.appendChild(videoElement);
+
+            let canvasElem = parent.appendChild(document.createElement("canvas"));
+            canvasElem.id = "videoCanvas";
+
+            QrScanner.WORKER_PATH = 'resources/jsonform/qr-scanner-worker.min.js';
+
+            qrScanner = new QrScanner(videoElement, result => {
+                let success = onQrCodeScanned(result);
+                if (success) {
+                    this.reactionScreenOnScanned();
+                    this.closeModal();
+                }
+            });
+
+            qrScanner.start().then(() => {
+                // Draw video on canvas with rectangle
+                videoElement.onplay = function () {
+                    setTimeout(function () {
+                        drawVideoToCanvas(videoElement, canvasElem);
+                    }, 300);
+                };
+            }).catch(error => {
+                console.info("camera permission not granted");
+                showCameraUnavailable();
+            });
+
+            //onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=2010101110111011101110121");
+            //this.closeModal();
+        }
+
+        function destroyQrScanner() {
+            if (!(qrScanner === null)) {
+                qrScanner.destroy();
+                qrScanner = null;
+            }
+        }
+
+        function handleDownloadImage(downloadImageButton, canvasElement) {
+            dlCanvas(downloadImageButton, canvasElement);
+        }
+
+        function dlCanvas(downloadImageButton, canvasElem) {
+            let dt = canvasElem.toDataURL('image/png');
+            downloadImageButton.href = dt;
+        }
+
+        function generateQrCode(element, inputText) {
+            let selector = $(element);
+            selector.empty();
+            // Set Size to Match User Input
+            // FIXME: fix width and height
+            selector.css({
+                'width': 255,
+                'height': 255
+            });
+            // Generate and Output QR Code
+            selector.qrcode({
+                width: 255,
+                height: 255,
+                text: inputText
+            });
+        }
+
+        // from https://stackoverflow.com/questions/59702127/draw-rectangle-over-html-5-tag-video first answer
+        function drawVideoToCanvas(video, canvas) {
+            let ctx = canvas.getContext('2d');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            let rectWidth = Math.min(canvas.width * (2 / 3), canvas.height * (2 / 3));
+
+            let centerX = canvas.width / 2;
+            let centerY = canvas.height / 2;
+
+            let pX = centerX - rectWidth / 2;
+            let pY = centerY - rectWidth / 2;
+
+            ctx.rect(pX, pY, rectWidth, rectWidth);
+            ctx.lineWidth = "6";
+            ctx.strokeStyle = "red";
+            ctx.stroke();
+
+            setTimeout(function () {
+                drawVideoToCanvas(video, canvas);
+            }, 100);
+        }
+
+        function onQrCodeScanned(qrCode) {
+            let url;
+            try {
+                url = new URL(qrCode);
+            } catch (_) {
+                // TODO: display error-msg to user in better way
+                alert("Scanned in wrong QR-code.");
+                console.info("Scanned code is not a url: " + qrCode);
+                return false;
+            }
+
+            let seed = url.searchParams.get(baseConfigs.seedUrlParamName);
+
+            if (seed === null) {
+                // TODO: display error-msg to user in better way
+                // No parameter for seed found
+                alert("Scanned in wrong QR-code.");
+                console.info("Scanned url does not contain TUCA seed: " + qrCode);
+                return false;
+            }
+
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let newSettings = SettingsParser.parseSettingsFromSeed(schema, seed);
+
+            if (newSettings === null) {
+                // TODO: display error-msg to user in better way
+                //alert("Scanned in wrong QR-code.");
+                wrongQrCode();
+                console.info("Scanned seed could not be parsed into a settings configuration: " + seed);
+                return false;
+            }
+
+            applyNewSettingsObjToApp(newSettings);
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+            return true;
+        }
+
+        function wrongQrCode() {
+            let modal = document.getElementById('modalTop');
+            let scan = $("#scanImgElement");
+            let share = $("#shareImgElement");
+            let shareScanHeading = $("#shareOrScan");
+            share.css("display", "none");
+            scan.css("display", "none");
+            shareScanHeading.css("display", "none");
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+
+            this.hideBubbleContainer();
+            this.disableSnapshotButton();
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textNode = {
+                class: "modalText",
+                text: strings.general.wrongQrCode[lang]
+            };
+            template.attachText("#modalTitleID", textNode);
+
+            let okBtn = {
+                class: "deleteBtn",
+                onclick: "closeModalContainer()",
+                textContent: strings.general.ok[lang]
+            };
+
+            template.attachBtn("#modalButtonsID", okBtn);
+
+            let okButton = document.querySelector(".deleteBtn");
+            okButton.addEventListener("click", () => {
+                this.closeModal();
+            });
+            $("#bubbleContainer").css("display", "block");
+        }
+
+        function reactionScreenOnScanned() {
+            let modal = document.getElementById('modalTop');
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+
+            this.hideBubbleContainer();
+            this.disableSnapshotButton();
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textNode = {
+                class: "modalText",
+                text: strings.general.qrCodeScanned[lang]
+            };
+            template.attachText("#modalTitleID", textNode);
+
+            let okBtn = {
+                class: "deleteBtn",
+                onclick: "closeModalContainer()",
+                textContent: strings.general.ok[lang]
+            };
+
+            template.attachBtn("#modalButtonsID", okBtn);
+
+            let okButton = document.querySelector(".deleteBtn");
+            okButton.addEventListener("click", () => {
+                this.closeModal();
+            });
+            $("#bubbleContainer").css("display", "block");
+        }
+
+        function resetGame() {
+            var modal = document.getElementById('modalTop');
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+            else {
+                this.hideBubbleContainer();
+                this.disableSnapshotButton();
+                this.hideManipulationButtons();
+                this.closeBoardSelector();
+                UtilitiesClass.disablePointerEventsOnModalOpen();
+                modal.style.display = "block";
+                modal.style.background = "transparent";
+
+                document.querySelector(".modalFormContent").style.display = "block";
+                document.querySelector(".innerGrid").style.display = "none";
+                document.querySelector(".modalFullframeContainer").style.display = "none";
+                template.clearContent("#modalButtonsID");
+                template.clearContent("#modalTitleID");
+                template.clearContent("#modalBodyID");
+                template.clearContent("#innerGridForm");
+                template.clearContent("#filterGrid");
+
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+                let textNode = {
+                    class: "modalText",
+                    text: strings.reset[lang]
+                };
+                template.attachText("#modalTitleID", textNode);
+
+                let cancelBtn = {
+                    class: "cancelBtn",
+                    onclick: "closeModalContainer()",
+                    textContent: strings.general.no[lang]
+                };
+                template.attachBtn("#modalButtonsID", cancelBtn);
+
+                let deleteBtn = {
+                    class: "deleteBtn",
+                    onclick: "closeModalContainer()",
+                    textContent: strings.general.yes[lang]
+                };
+
+                template.attachBtn("#modalButtonsID", deleteBtn);
+
+                let dltBtn = document.querySelector(".deleteBtn");
+                dltBtn.addEventListener("click", () => {
+                    pd.reset();
+                });
+                $("#bubbleContainer").css("display", "block");
+            }
+        }
+
+        function closeModal() {
+            destroyQrScanner();
+            document.getElementById('modalTop').style.display = 'none';
+            this.closeModalContainer();
+            this.enableSnapshotButton();
+            $('#shareOrScandiv').remove();
+            if ($('#birdContainer').is(':visible')) {
+                this.showBubbleContainer();
+            }
+        }
+
+        function callHintAI() {
+            if (!pd.gameController.game()._board.isSolved()) {
+                pd.visual.callHintAI();
+                this.hideManipulationButtons();
+            } else {
+                // TODO - handle, e.g. shake hint button
+                console.log("Game is already solved. Cannot display hint");
+            }
+        }
+        function splitTheBoard() {
+            splitButton = document.getElementById("splitBoardimg")
+            if (!splitButton.classList.contains("splitbuttonimg")) {
+                splitButton.classList.add("splitbuttonimg");
+                if (!pd.gameController.game()._board.isSolved()) {
+                    pd.visual.splitTheBoard();
+                } else {
+                    console.log("Game is already solved");
+                    pd.visual.unblockPartition();
+                }
+            } else {
+                splitButton.classList.remove("splitbuttonimg");
+                pd.visual.undoSplit();
+            }
+
+        }
+
+        function rotateClkWise() {
+            pd.rotateClkWise();
+        }
+
+        function rotateAntiClkWise() {
+            pd.rotateAntiClkWise();
+        }
+
+        function flipH() {
+            pd.flipH();
+        }
+
+        function flipV() {
+            pd.flipV();
+        }
+
+        function prefillBoard() {
+            pd.visual.prefillBoard();
+            this.closeBoardSelector();
+            this.closeSettings();
+        }
+
+        function execUndo() {
+            this.hideManipulationButtons();
+            pd.visual.undo();
+        }
+
+        function execRedo() {
+            pd.visual.redo();
+        }
+
+
+        // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
+        function insertUrlParam(key, value) {
+            if (history.pushState) {
+                let searchParams = new URLSearchParams(window.location.search);
+                searchParams.set(key, value);
+                let newURL = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString();
+                window.history.pushState({ path: newURL }, '', newURL);
+            }
+        }
+
+        function handleJsonFormSubmit(errors, values) {
+            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
+            // TODO: display seed somehow
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+
+            if (errors === false) {
+                event.preventDefault();
+                // console.log("JsonForm: Submitted values:");
+                // console.log(values);
+                closeSettings();
+                applyNewSettingsObjToApp(values);
+            }
+        }
+
+        function applyNewSettingsObjToApp(settings) {
+            let oldSettings = SettingsSingleton.getInstance().getSettings();
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, settings);
+
+            SettingsSingleton.getInstance().setSettings(settings);
+            processChangesToSettings(changesToSettings, settings);
+        }
+
+        function processChangesToSettings(changes, settings) {
+            changes.forEach(changesEntry => {
+                let heading = changesEntry.heading;
+                let key = changesEntry.key;
+
+                if (heading === "general" && key === "language") {
+                    let lang = settings[heading][key];
+                    document.getElementById("labelNumberSolutions").textContent = strings.numberOfPossibleSolutions[lang] + ': ?';
+                    document.getElementById("speechBubbleText").textContent = strings.numberOfPossibleSolutions[lang] + ': ?';
+                } else if (heading === "hinting" && key === "enableHinting") {
+                    let hintingEnabled = settings[heading][key];
+                    document.getElementById("hintButton").style.display = hintingEnabled ? "" : "none";
+                } else if (heading === "hinting" && key === "showNumberOfPossibleSolutions") {
+                    let showNumberOfPossibleSolutions = settings[heading][key];
+                    if (SettingsSingleton.getInstance().getSettings().general.enableBird) {
+                        document.getElementById("speechBubbleText").style.display = showNumberOfPossibleSolutions ? "" : "none";
+                    }
+                    document.getElementById("labelNumberSolutions").style.display = showNumberOfPossibleSolutions ? "" : "none";
+
+                } else if (heading === "prefilling" && key === "enablePrefilling") {
+                    let visible = settings[heading][key];
+                    document.getElementById("prefillBoard").style.display = visible ? "" : "none";
+                } else if (heading === "general" && key === "enableBgMusic") {
+                    let playBgMusic = settings[heading][key];
+                    let bgMusicAudio = document.getElementById("bgMusic");
+                    if (playBgMusic) {
+                        if (bgMusicAudio.paused || bgMusicAudio.duration === 0) {
+                            bgMusicAudio.volume = 0.4;
+                            bgMusicAudio.play();
+                        }
+                    } else {
+                        if (!bgMusicAudio.paused) {
+                            bgMusicAudio.pause();
+                            bgMusicAudio.currentTime = 0;
+                        }
+                    }
+                } else if (heading === "general" && key === "enableBird") {
+                    let birdEnabled = settings[heading][key];
+                    if (birdEnabled) {
+                        document.getElementById("birdContainer").style.display = "block";
+                        document.getElementById("bubbleContainer").style.display = "block";
+                        document.getElementById("labelNumberSolutionsContainer").style.display = "none";
+                    } else {
+                        document.getElementById("birdContainer").style.display = "none";
+                        document.getElementById("bubbleContainer").style.display = "none";
+                        document.getElementById("labelNumberSolutionsContainer").style.display = "block";
+                    }
+                }
+                else if (heading === "theming" && key === "theme") {
+                    var newThemeValue = settings[heading][key];
+                    this.applyColorToPieces(newThemeValue);
+                    if (newThemeValue == 'default') {
+                        document.getElementById('switcher-id').href = 'resources/css/themes/defaultTheme.css';
+                    }
+                    else if (newThemeValue == 'dayTheme') {
+                        document.getElementById('switcher-id').href = 'resources/css/themes/dayTheme.css';
+                    }
+                    else if (newThemeValue == 'nightTheme') {
+                        document.getElementById('switcher-id').href = 'resources/css/themes/iceTheme.css';
+                    }
+                    localStorage.setItem('style', newThemeValue);
+                }
+
+                let allCustomSettings = CustomSettingsEntrySingleton.getInstance().getAll();
+                allCustomSettings.forEach(customSettings => {
+                    if (customSettings.getName() === SettingsForm.generateSettingsEntryName(heading, key)) {
+                        customSettings.processChangesToSettings(settings[heading][key], pd);
+                    }
+                });
+            });
+        }
+
+        function applyColorToPieces(selectedTheme) {
+            let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T',
+                'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+            if (selectedTheme == "blackAndWhiteTheme") {
+                piecesIdArray.forEach(function (item) {
+                    Array.prototype.forEach.call(document.getElementById(item).getElementsByClassName("bmPoint"), function (element) {
+                        element.style.background = "#000000"
+                    });
+                });
+            }
+            else {
+                var colorsArrayDefault = ['#7a28cc', '#cc28cc', '#cc2828', '#cc7a28', '#cccc28', '#7acc28', '#28cc28', '#28cc7a', '#28cccc', '#287acc', '#2828cc', '#cc287a'];
+                var counter = 0;
+                piecesIdArray.forEach(function (piece, counter) {
+                    Array.prototype.forEach.call(document.getElementById(piece).getElementsByClassName("bmPoint"), function (element) {
+                        element.style.background = colorsArrayDefault[counter];
+                    });
+                    counter++;
+                });
+            }
+        }
+
+        function selectSettings() {
+            let modal = document.getElementById('modalTop');
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            } else {
+                openSettings();
+                UtilitiesClass.disablePointerEventsOnModalOpen();
+                this.hideManipulationButtons();
+                this.hideBubbleContainer();
+            }
+        }
+
+        function openSettings() {
+            let modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "#eceaea";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+            template.clearContent(".modalFullframeContainer");
+
+            //hide back button for main settings menu
+            document.getElementById("backButton").style.display = "none";
+
+            //add form to attach settings to
+            //$('#innerGridForm').jsonForm({
+            //    schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
+            //    onSubmit: this.handleJsonFormSubmit,
+            //    displayErrors: this.handleJsonFormErrors
+            //});
+
+            SettingsForm.generateForm(
+                $('.modalFullframeContainer')[0],
+                this.handleJsonFormSubmit,
+                this.handleClickedOnLicenses
+            );
+
+            //rename submit button
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            document.getElementById('btnSettingsSubmit').innerText = strings.general.submit[lang];;
+
+            let settings = SettingsSingleton.getInstance().getSettings();
+            SettingsForm.updateForm($('.modalFullframeContainer')[0], settings);
+            // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
+
+            // scale settings smaller for very wide monitors (currently only working for chrome)
+            // Ipad has a ratio of of approx. 1.4 - hence scale settings smaller for wider stuff than 1,5
+            let isChrome = !!window.chrome;
+            if (((window.innerWidth / window.innerHeight) > 1.4)) {
+
+                //excludes other browsers from adaption
+                if (isChrome) {
+                    document.getElementById('modalFullframeContainerID').style.zoom = (1.4 / (window.innerWidth / window.innerHeight));
+                    //adapt the floatingButtons to still align with the bottom bar
+                    $('.formButton').css('bottom', (11 * (1 / (1.4 / (window.innerWidth / window.innerHeight))) + 'vw'));
+                }
+
+
+            } else {
+
+                if (isChrome) {
+                    document.getElementById('modalFullframeContainerID').style.zoom = 1;
+                    $('.formButton').css('bottom', '11vw');
+                }
+            }
+            $("#shareOrScan").remove();
+            $("#scanImgElement").remove();
+            $("#shareImgElement").remove();
+        }
+
+        // called when license button is clicked in settings
+        function handleClickedOnLicenses() {
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
+            var modal = document.getElementById('modalTop');
+            let modalFormContent = document.getElementsByClassName('modalFormContent');
+            let y = document.getElementsByClassName("cActionBtn");
+            //show back button
+            let btn = document.getElementById("backButton");
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let licenceHeading = strings.License[lang];
+            let h2 = document.createElement("h2");
+            let div5 = document.createElement("div");
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent(".modalFullframeContainer");
+            modal.style.background = "#dcf0ed";
+            document.getElementById("modalFormContainerID").style.backgroundColor = "lightgrey";
+            document.getElementById("modalFormContainerID").style.border = "none";
+            for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "none"; }
+            $(".modalFormContent").css("display", "none");
+            btn.style.display = "block";
+            $(".close").click(function () {
+                document.getElementById("modalTop").style.display = "none";
+                $("#licencesTable").attr("style", "display:none");
+                $("#licenseHeading").attr("style", "display:none");
+                $("#tableLicenseDiv").attr("style", "display:none");
+                $("#tableLicenseDiv").remove();
+                if ($("#licencesTable")) {
+                    $("#licencesTable").attr("style", "display:none");
+                    $("#licenseHeading").attr("style", "display:none");
+                    $("#tableLicenseDiv").attr("style", "display:none");
+                    for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "auto"; }
+                }
+            });
+            btn.onclick = function () {
+                openSettings();
+                document.getElementById("tableLicenseDiv").style.display = "none";
+                if ($("#licencesTable")) {
+                    document.getElementById("licencesTable").style.display = "none";
+                    document.getElementById("licenseHeading").style.display = "none";
+                    document.getElementById("tableLicenseDiv").style.display = "none";
+                    for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "auto"; }
+                }
+                document.getElementById("licenseHeading").style.display = "none";
+                if (div5) {
+                    div5.style.display = "none";
+                }
+                //SettingsForm.updateForm($('#innerGridForm')[0], settings);
+                btn.style.display = "none";
+            };
+            h2.id = "licenseHeading";
+            h2.innerHTML = strings.License[lang];
+            h2.style.textAlign = "center";
+            div5.id = "tableLicenseDiv";
+            div5.style.marginTop = "10vh";
+            div5.style.marginRight = "5vh";
+            div5.appendChild(h2);
+            let ConfigKeys = [];
+            for (let h in strings.settings.license.enumTitles) {
+                let i = strings.settings.license.enumTitles[h][lang];
+                ConfigKeys.push(i);
+            }
+            modal.appendChild(document.createElement(strings.License[lang]));
+            var table = document.createElement('TABLE');
+            table.id = "licencesTable"
+            table.border = '1px solid black';
+            table.style.textAlign = "center";
+            table.style.marginLeft = "2vh";
+            table.style.marginRight = "auto";
+            var tableBody = document.createElement('TBODY');
+            table.appendChild(tableBody);
+            var tr = document.createElement('TR');
+            tableBody.appendChild(tr);
+            var x = window.matchMedia("(max-width: 860px)")
+            for (var i = 0; i < ConfigKeys.length; i++) {
+                var td = document.createElement('TH');
+                td.classList.add("TableHead");
+                td.style.width = '20vw';
+                td.style.padding = "1vw";
+                td.border = '0.5vw solid black';
+                td.style.borderCollapse = "collapse";
+                if (x.matches) { // If media query matches
+                    td.style.fontSize = "1vw";
+                    td.style.width = '10vw';
+                }
+                else {
+                    td.style.fontSize = "1vw";
+                    td.style.width = '10vw';
+                }
+                td.appendChild(document.createTextNode(ConfigKeys[i]));
+                tr.appendChild(td);
+            }
+            for (let heading in licensesConfig) {
+                let subSettings = licensesConfig[heading];
+                var tr1 = document.createElement('TR');
+                var x = window.matchMedia("(max-width: 700px)");
+                tableBody.appendChild(tr1);
+                for (let key in subSettings) {
+                    if (key === "name") {
+                        var td = document.createElement('TH');
+                        td.classList.add("TableNameCell");
+                        let entry = subSettings[key][lang];
+                        let imageElement;
+                        const subString = "image";
+                        if (entry.includes(subString)) {
+                            imageElement = document.createElement("img");
+                            imageElement.setAttribute("style", "width: 10vw; height: 10vw; border: 2px solid black; text-align: center; border:transparent");
+                            let img_src = "resources/images/icons/" + heading + ".ico";
+                            imageElement.setAttribute("src", img_src);
+                            td.appendChild(imageElement);
+                        }
+                        td.style.width = '20vw';
+                        td.style.padding = "1vw";
+                        td.border = '0.5vw solid black';
+                        td.style.borderCollapse = "collapse";
+                        if (x.matches) { // If media query matches
+                            td.style.fontSize = "1vw";
+                            td.style.width = '10vw';
+                        }
+                        else {
+                            td.style.fontSize = "1vw";
+                            td.style.width = '10vw';
+                        }
+                        td.appendChild(document.createElement("br"));
+                        td.appendChild(document.createTextNode(entry));
+                    }
+                    else {
+                        var td = document.createElement('TH');
+                        td.classList.add("TableDataCell");
+                        entry = subSettings[key];
+                        td.style.width = '20vw';
+                        td.style.padding = "0.5vw";
+                        td.border = '0.5vw solid black';
+                        td.style.borderCollapse = "collapse";
+                        if (x.matches) { // If media query matches
+                            td.style.fontSize = "1vw";
+                            td.style.width = '10vw';
+                        }
+                        else {
+                            td.style.fontSize = "1vw";
+                            td.style.width = '10vw';
+                        }
+                        td.appendChild(document.createTextNode(entry));
+                    }
+                    //tr1.appendChild(td1);
+                    tr1.appendChild(td);
+                }
+            }
+            div5.appendChild(table);
+            modal.appendChild(div5);
+        }
+
+        function closeModalContainer() {
+            document.getElementById('modalTop').style.display = "none";
+            document.getElementById('backButton').style.display = "none";
+            UtilitiesClass.enablePointerEventsOnModalClose();
+        }
+
+        function closeSettings() {
+            this.closeModalContainer();
+            //Do not remove as this will create issue while toggling between the popups
+            this.enableSnapshotButton();
+        }
+
+        function closeBoardSelector() {
+            document.getElementById('modalTop').style.display = "none";
+            UtilitiesClass.enablePointerEventsOnModalClose();
+        }
+
+        function selectSeeding() {
+            document.getElementById("seedingCover").style.visibility = "visible";
+            document.getElementById("seeding").style.visibility = "visible";
+        }
+
+        function closeSeeding() {
+            document.getElementById("seedingCover").style.visibility = "hidden";
+            document.getElementById("seeding").style.visibility = "hidden";
+        }
+
+        function hideManipulationButtons() {
+            document.getElementById('pieceManipulation').style.display = 'none';
+        }
+
+        function disablePrefillButton() {
+            document.getElementById('prefillBoard').disabled = 'true';
+        }
+
+        function enablePrefillButton() {
+            document.getElementById('prefillBoard').disabled = 'false';
+        }
+
+        function submitSeed() {
+            let seedValue = document.getElementById("seedBar").value;
+            let settings = SettingsParser.parseSettingsFromSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), seedValue);
+            if (!(settings === null)) {
+                // console.log("Seedbar entered value: " + seedValue);
+                document.getElementById("seedBar").value = "";
+
+                document.getElementById("seedingCover").style.visibility = "hidden";
+                document.getElementById("seeding").style.visibility = "hidden";
+
+                let settings = SettingsSingleton.getInstance().getSettings();
+                SettingsForm.updateForm($('#innerGridForm')[0], settings);
+                // this.postProcessSettingsForm(settings);
+            } else {
+                // TODO: handle error
+            }
+        }
+
+        function addFlash(elementId) {
+            let element = document.querySelector("#" + elementId);
+            element.classList.add('FlashOn');
+            var millisecondsToWait = 100;
+            setTimeout(function () {
+                element.classList.remove('FlashOn');
+            }, millisecondsToWait);
+        }
+
+        function saveGameImage() {
+            addFlash("playarea");
+            pd.visual.saveGameImage(SnapshotType.Original);
+        }
+
+        function loadGameImage(key) {
+            pd.visual.loadGame(key);
+            pd.loadBoard(pd.visual.getBoard(), "Snapshot");
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "none";
+
+        }
+
+        function disableSnapshotButton() {
+            $('#screenshot').prop('disabled', true);
+        }
+
+        function enableSnapshotButton() {
+            $('#screenshot').prop('disabled', false);
+        }
+        function deleteGameImage(imgKey, gameId) {
+            pd.visual.deleteGameImage(imgKey);
+            showGameImages();
+            renderGallery(gameId);
+
+        }
+
+        function generateRandomColor() {
+            /**
+             * https://stackoverflow.com/questions/1152024/
+             * best-way-to-generate-a-random-color-in-javascript/1152508
+            */
+
+            return '#' + (0x1000000 + Math.random() * 0xffffff).toString(16).substr(1, 6);
+
+        }
+
+        function addReplyFilterImage(img, stateType) {
+            let targetDiv;
+            let fTextDivStart = document.querySelector(".ftextDivStart");
+            let fTextDivEnd = document.querySelector(".ftextDivEnd");
+
+            if (fTextDivStart.getAttribute('type') == "image") {
+                stateType = "end";
+            }
+            if (stateType == "start") {
+                fTextDivStart.style.border = 0;
+                fTextDivEnd.style.border = "2.5px dotted black";
+                fTextDivStart.setAttribute('type', "image");
+                finishBlink(fTextDivStart);
+                blink(fTextDivEnd);
+                targetDiv = fTextDivStart;
+            } else {
+                fTextDivEnd.style.border = 0;
+                targetDiv = fTextDivEnd;
+                finishBlink(fTextDivEnd);
+            }
+
+            targetDiv.innerHTML = "";
+            let childs = targetDiv.childNodes;
+            childs.forEach((item) => {
+                targetDiv.removeChild(item);
+            });
+
+            html2canvas(img).then(function (cloneImg) {
+                cloneImg.setAttribute("class", "screenshot");
+                cloneImg.style.width = '10vw';
+                cloneImg.style.height = '5.5vw';
+                cloneImg.value = img.value;
+                targetDiv.appendChild(cloneImg);
+            });
+
+        }
+
+        function renderGallery(gameId, callerType = "Snapshot") {
+
+            document.querySelector(".innerGrid").style.display = "block";
+            let imageGrid = document.getElementById('innerGrid');
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+
+            let images = pd.visual.getImagesByGameId(gameId);
+
+            if (images == undefined) {
+                return;
+            }
+
+            images.forEach((item) => {
+                let imgKey = Object.keys(item)[0];
+                let image = item[imgKey];
+                image.value = imgKey;
+                let imageDiv = document.createElement("div");
+                imageDiv.setAttribute("class", "imageDiv");
+                imageDiv.appendChild(image);
+                imageGrid.appendChild(imageDiv);
+
+                if (callerType == "Snapshot") {
+                    let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+                    let buttonDiv = document.createElement("div");
+                    buttonDiv.setAttribute("class", "imageBtnDiv");
+
+                    let loadBtn = document.createElement("button");
+                    loadBtn.setAttribute("class", "imageButton imageLoadBtn");
+                    loadBtn.textContent = strings.replay.loadSnapshot[lang];
+                    loadBtn.addEventListener('click', function () {
+                        loadGameImage(image.value);
+                        UtilitiesClass.enablePointerEventsOnModalClose();
+                    }, false);
+
+                    let deleteBtn = document.createElement("button");
+                    deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
+                    deleteBtn.textContent = strings.replay.deleteSnapshot[lang];
+                    deleteBtn.addEventListener('click', function () {
+                        deleteGameImage(imgKey, gameId);
+                    }, false);
+
+
+                    imageDiv.addEventListener('click', function () {
+                        let allImageDiv = imageGrid.querySelectorAll(".imageDiv");
+                        let btnDivElement = document.querySelector(".imageBtnDiv");
+                        allImageDiv.forEach((divElement) => {
+                            if (divElement.contains(btnDivElement)) {
+                                divElement.removeChild(btnDivElement);
+                            }
+                        });
+                        buttonDiv.appendChild(loadBtn);
+                        buttonDiv.appendChild(deleteBtn);
+                        imageDiv.appendChild(buttonDiv);
+                    }, false);
+                }
+                else if (callerType.includes("Replay")) {
+                    let stateType = callerType.split(':');
+                    imageDiv.addEventListener('click', function () {
+                        addReplyFilterImage(imageDiv.childNodes[0], stateType[1]);
+                    }, false);
+                }
+            });
+        }
+
+        function showGameImages() {
+            var modal = document.getElementById('modalTop');
+            this.disableSnapshotButton();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
+            this.hideManipulationButtons();
+            modal.style.background = " lightgrey";
+            modal.style.display = "block";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".outerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            let imageGrid = document.getElementById('innerGrid');
+            let imgFilterGrid = document.getElementById('filterGrid');
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            if (document.getElementById('filterGrid').style.display = "block") {
+                document.getElementById('innerGrid').style.marginLeft = "15vw";
+            }
+
+            pd.visual.delGameAutoImages();
+            pd.visual.saveGameImage(SnapshotType.Auto);
+            let currGmKey = pd.visual.getCurrentGameKey();
+            let gameIds = pd.visual.getAllGameIds();
+
+            let currGameId = pd.visual.getCurrentGameId();
+            let images = pd.visual.getImagesByGameId(currGameId);
+            let imageType = undefined;
+            let currImgType = undefined;
+            if (images != undefined) {
+                images.forEach((item) => {
+                    let imgKey = Object.keys(item)[0];
+                    let image = item[imgKey];
+                    currImgType = parseInt(image.getAttribute('type'));
+                    if (currImgType == SnapshotType.Original) {
+                        imageType = currImgType;
+                    }
+                });
+            }
+            if (imageType == undefined) {
+                gameIds.forEach(element => {
+                    if (element == currGameId) {
+                        gameIds.splice(gameIds.indexOf(currGameId), 1);
+                        return;
+                    }
+                });
+            }
+
+            gameIds.reverse().forEach((gameId) => {
+                let img = pd.visual.getLastGameimage(gameId);
+                let images = pd.visual.getImagesByGameId(gameId);
+                if (img == undefined || images.length == 0) {
+                    return;
+                }
+
+                if (gameId == currGmKey) {
+                    img.style.filter = "brightness(120%) saturate(120%)";
+                    img.style.border = "2.5px dotted black";
+                    renderGallery(gameId);
+                }
+                else {
+                    img.style.border = "0";
+                }
+
+                /* All css property should be aligned with generic IPad design perspective*/
+                img.setAttribute("class", "filterImage");
+                img.style.width = "10vw";
+                img.style.height = "5.5vw";
+
+                let fImgDiv = document.createElement("div");
+                fImgDiv.setAttribute("class", "fimageDiv");
+
+                img.addEventListener('click', function () {
+                    renderGallery(gameId);
+                }, false);
+
+                fImgDiv.appendChild(img);
+                imgFilterGrid.appendChild(fImgDiv);
+            });
+        }
+
+        function execReplay(startGameState, currGameState) {
+
+            if (startGameState == undefined ||
+                currGameState == undefined) {
+                console.warn("Start Or End game state not selected");
+                return;
+            }
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "none";
+
+            let replayId = document.getElementById("replay");
+            let replayImg = replayId.children[0];
+            replayImg.setAttribute('src', 'resources/images/icons/pause.png');
+
+            pd.replay(startGameState, currGameState);
+            pd.visual.setReplayStatus(true);
+            this.enableSnapshotButton();
+        }
+
+        function changeReplayFilterUI(startElem, endElem, contentType) {
+            startElem.style.border = "2.5px dotted black";
+            startElem.style.color = "#eceaea";
+
+            let fDivEnd = document.querySelector(".ftextDivEnd");
+            endElem.style.border = "0";
+            endElem.style.color = "black";
+
+            let gameId = pd.visual.getCurrentGameId();
+            renderGallery(gameId, contentType);
+        }
+
+        function blink(element) {
+
+            element.animate([
+                { color: "yellow" }, { color: "red" }],
+                {
+                    duration: 1000,
+                    iterations: Infinity
+                });
+        }
+
+        function finishBlink(element) {
+            element.getAnimations().forEach(
+                function (animation) {
+                    return animation.pause();
+                }
+            );
+        }
+
+        function showReplayUI() {
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textStartState = strings.replay.startStateText[lang],
+                textEndState = strings.replay.endStateText[lang];
+
+            if ($('.modalFormContainer').is(':visible')) {
+                this.closeModal();
+                document.getElementById('filterGrid').style.backgroundColor = "none";
+            }
+
+            if (pd.visual.isRelayRunning()) {
+                pd.visual.setReplayStatus(false);
+                return;
+            }
+
+            this.disableSnapshotButton();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
+            hideManipulationButtons();
+            pd.visual.saveGameImage(SnapshotType.Auto);
+
+            var modal = document.getElementById('modalTop');
+            modal.style.background = " lightgrey";
+            modal.style.display = "block";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".outerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+
+            let imageGrid = document.getElementById('innerGrid');
+            let imgFilterGrid = document.getElementById('filterGrid');
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            if (document.getElementById('filterGrid').style.display = "block") {
+                document.getElementById('innerGrid').style.marginLeft = "16vw";
+            }
+
+            let startGameState = pd.getGameState("start");
+            let currGameState = pd.getGameState("current");
+
+            if (startGameState == undefined) {
+                document.querySelector(".modalFormContent").style.display = "block";
+                document.querySelector(".innerGrid").style.display = "none";
+                let textNode = {
+                    name: "modalText",
+                    text: strings.replay.gameNotStartedYet[lang],
+                }
+
+                template.attachText("#modalTitleID", textNode);
+                return;
+            }
+
+            imgFilterGrid.style.backgroundColor = "#c7c3c3";
+            let fTextDivStart = document.createElement("div");
+            fTextDivStart.setAttribute("class", "fTextDiv ftextDivStart");
+            fTextDivStart.setAttribute("type", "text");
+            fTextDivStart.innerHTML += textStartState;
+            imgFilterGrid.appendChild(fTextDivStart);
+
+
+
+            let fTextDivEnd = document.createElement("div");
+            fTextDivEnd.setAttribute("class", "fTextDiv ftextDivEnd");
+            fTextDivEnd.setAttribute("type", "text");
+            fTextDivEnd.innerHTML += textEndState;
+            imgFilterGrid.appendChild(fTextDivEnd);
+
+
+            fButtonDiv = document.createElement("div");
+            fButtonDiv.setAttribute("class", "fTextDiv fTextbutton");
+            fButtonDiv.style.backgroundColor = "inherit";
+            fButtonDiv.style.border = "0";
+
+            imgFilterGrid.appendChild(fButtonDiv);
+
+            let replyBtn = document.createElement("button");
+            replyBtn.setAttribute("class", "imageButton imageLoadBtn replayBtn");
+            replyBtn.textContent = strings.replay.doReply[lang];
+
+
+            fButtonDiv.appendChild(replyBtn);
+
+            blink(fTextDivStart);
+            changeReplayFilterUI(fTextDivStart, fTextDivEnd, "Replay:start");
+            fTextDivStart.addEventListener('click', function () {
+                fTextDivStart.setAttribute("type", "text");
+                changeReplayFilterUI(fTextDivStart, fTextDivEnd, "Replay:start");
+            }, false);
+
+            fTextDivEnd.addEventListener('click', function () {
+                fTextDivEnd.setAttribute("type", "text");
+                changeReplayFilterUI(fTextDivEnd, fTextDivStart, "Replay:end");
+            }, false);
+
+            replyBtn.addEventListener('click', function () {
+                let startCmdKey = document.querySelector(".ftextDivStart").childNodes[0].value;
+                let endCmdKey = document.querySelector(".ftextDivEnd").childNodes[0].value;
+
+                execReplay(startCmdKey, endCmdKey);
+            }, false);
+        }
+
+        function loadBoard(selectedBoard) {
+            document.getElementById("modalTop").style.display = "none";
+            pd.loadBoard(selectedBoard);
+            this.closeModalContainer();
+        }
+
+        function closeForm() {
+            document.getElementById("board_selection_form").style.display = "none";
+        }
+
+        function showBubbleContainer() {
+            document.getElementById('bubbleContainer').style.display = "block";
+        }
+
+        function hideBubbleContainer() {
+            document.getElementById('bubbleContainer').style.display = "none";
+        }
+
+    </script>
+    <script src="./registerSW.js"></script>
+
+</body>
+
+</html>

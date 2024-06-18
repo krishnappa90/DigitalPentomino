@@ -1,0 +1,93 @@
+/*reference : https://codepen.io/hariharakumar/pen/VmOdBx
+*/
+
+
+
+.preloader {
+ position: fixed;
+ left: 0;
+ top: 0;
+ width: 100%;
+ height: 100%;
+ margin: 0;
+ padding: 0;
+ z-index: 99999;
+ text-align: center;
+ display: flex;
+ background-color: #fff;
+ align-items: center;
+ flex-flow: row nowrap;
+ justify-content: center;
+}
+
+.tuca {
+    background: none no-repeat scroll 0 0 #fff;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: 60%;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 9vh;
+    margin-right: 5vh;
+}
+
+.tuca img {
+    position: relative;
+    height: 40vh;
+    width: 70vh;
+    margin: 100px auto;
+    margin-top: 15%;
+    margin-left: 5%;
+}
+
+.sk-cube-grid {
+    position: absolute;
+    display: flex;
+    margin-left: 0vh;
+    margin-top:60vh;
+}
+
+ @media only screen and (max-width: 995px) {
+   .sk-cube-grid {
+       position: absolute;
+       display: flex;
+       margin-left: 0vh;
+       margin-top:30vh!important
+   }
+}
+
+@media only screen and (max-width: 1028px) {
+  .sk-cube-grid {
+      position: absolute;
+      display: flex;
+      margin-left: 0vh;
+      margin-top:10vh;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .sk-cube-grid {
+      position: absolute;
+      display: flex;
+      margin-left: 0vh;
+      margin-top:15vh!important
+  }
+}
+
+@media only screen and (max-height: 1495px) {
+  .sk-cube-grid {
+      position: absolute;
+      display: flex;
+      margin-left: 5vh;
+      margin-top:40vh!important
+  }
+}
+
+@media only screen and (max-height: 1905px) {
+  .sk-cube-grid {
+      position: absolute;
+      display: flex;
+      margin-left: 5vh;
+      margin-top:40vh!important
+  }
+}
