@@ -1,0 +1,16 @@
+3 files
+
+-baseConfigs.js--------------------contains list of board names(primary key) and basic configuration of a standard board(?)
+-config.js-------------------------board specific configurations for all boards in baseConfigs.js Overrides properties in baseConfigs.js
+-solutions.js----------------------all(unique?) solutions for the boards in baseConfigs.js
+
+solutions.js 
+
+
+allSolutions: {
+    boardName1 : solutionsArray,
+    ..........
+}
+solutionsArray: ["YTTT.ZZPP YYT...ZPP YNT...ZZP YN.....FF WNNUUXFFV WWNUXXXFV LWWUUXVVV LLLLIIIII ","YTTT.ZZPP YYT...ZPP YNT...ZZP YN.....FF LNNUUXFFV LWNUXXXFV LWWUUXVVV LLWWIIIII ","PPZZ.TTTY PPZ...TYY PZZ...TNY FF.....NY VFFXUUNNW VFXXXUNWW VVVXUUWWL IIIIILLLL ","PPZZ.TTTY PPZ...TYY PZZ...TNY FF.....NY VFFXUUNNL VFXXXUNWL VVVXUUWWL IIIIIWWLL ",]
+
+load into game as:  solutionsArray.forEach(solution => boardSolutions.push(solution.split(" ").filter(Boolean)))

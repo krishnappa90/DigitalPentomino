@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Game Controller Test Website</title>
+</head>
+
+<body>
+    <script src="../js/game.js"></script>
+    <script src="../js/board.js"></script>
+    <script src="../js/game-loader.js"></script>
+    <script src="../js/game-controller.js"></script>
+    <script src="../js/pentomino.js"></script>
+    <script src="../js/command-history/command-manager.js"></script>
+    <script src="../js/command-history/command-history-tree.js"></script>
+    <script src="../js/command-history/command.js"></script>
+    <script src="../js/command-history/mirror-h-command.js"></script>
+    <script src="../js/command-history/mirror-v-command.js"></script>
+    <script src="../js/command-history/move-to-position-command.js"></script>
+    <script src="../js/command-history/place-command.js"></script>
+    <script src="../js/command-history/rotate-anti-clk-wise-command.js"></script>
+    <script src="../js/command-history/rotate-clk-wise-command.js"></script>
+    <script>
+        let gameController = new GameController();
+        gameController.setGame(GameLoader.loadByName("Level 1"));
+        // Frontend uses gameController object to create board with pieces on them
+        // User clicks on cell (1, 1)
+        //let clickedPentomino = gameController.getPentominoAtPosition(1, 1);
+        // User drags pentomino to cell (5, 5)
+        // let occupiedPieces = gameController.movePentominoToPosition(clickedPentomino, 5, 5);
+        //if (occupiedPieces === null) {
+            // Piece goes back to old position
+        //} else {
+            // Piece is drawn in new position with help of occupiedPieces
+        //}
+    </script>
+</body>
+
+</html>

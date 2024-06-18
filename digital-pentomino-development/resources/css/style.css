@@ -1,0 +1,797 @@
+:root {
+  --rotationX: 0;
+  --rotationY: 0;
+  --rotationZ: 0;
+  --magnification:1;
+  --buttonRotA: 0deg;
+  --buttonRotB: 0deg;
+  --buttonRotC: 0deg;
+  --buttonRotD: 0deg;
+  --rotateH: 0deg;
+  --rotateV: 0deg;
+  --heightB: 0vw;
+}
+
+#game {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+
+
+#piecearea {
+  user-select: none;
+  width: 100%;
+  height: 10vw;
+}
+
+
+
+.cActionBtn img {
+  float: center;
+  width:  4vw;
+  height: 4vw;
+  object-fit: cover;
+  border-radius: 10%;
+}
+
+.cActionBtn {
+  border: 1px solid grey;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 6vw;
+  width: 6vw;
+  /* margin-left: 1%; */
+  margin-right: 1%;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  outline: 0;
+  background-color: white;
+}
+
+.cActionBtn:active {
+  box-shadow: inset 0 0 0 0.4vw #67b4e7;
+}
+
+#labelNumberSolutionsContainer{
+  position: fixed;
+  height: 5vw;
+  width: 25vw;
+  justify-content: center;
+  display: table-cell;
+  background-color: #e2e0e0;
+  border: 1px solid grey;
+  border-top-left-radius: 25px;
+  border-bottom: none;
+  border-right: none;
+  bottom: 10vw;
+  right: 0;
+}
+
+#labelNumberSolutionsContainerChild{
+  text-align: center;
+  vertical-align: middle;
+  font-size: 1.5vw;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  padding: 1vw;
+}
+
+#birdContainer{
+  position: fixed;
+  height: 18vw;
+  width: 18vw;
+  justify-content: center;
+  display: table-cell;
+  right: 0;
+  bottom: 4vw;
+  z-index:500;
+  pointer-events:none;
+}
+
+#birdContainer:active{
+  pointer-events:none; /* only allow hover events on the container */
+}
+
+#birdContainer img{
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+#birdContainer img:hover {
+  transform: rotate(5deg);
+  -webkit-transform: rotate(5deg);
+}
+
+#bubbleContainer{
+  position: fixed;
+  height: 12vw;
+  width: 25vw;
+  justify-content: center;
+  display: table-cell;
+  right: 11vw;
+  bottom: 7vw;
+  z-index:500;
+}
+
+.anim{
+  /* position: relative;
+  top:98.5vw;
+  left : 82.5vw;
+  height: 18vw;
+  width: 18vw;
+  justify-content: center;
+  display: table-cell;
+  right: 0;
+  bottom: 4vw;
+  z-index:500; */
+  animation-name: example;
+  animation-duration: 4s;
+  animation-delay: 1s;
+}
+
+@keyframes example {
+  0%   {transform: rotate(30deg); -webkit-transform: rotate(30deg);}
+  20%  {transform: rotate(-10deg); -webkit-transform: rotate(-10deg);}
+  22%  {transform: rotate(0deg); -webkit-transform: rotate(0deg);}
+  25%  {transform: rotate(30deg); -webkit-transform: rotate(30deg);}
+  40%  {transform: rotate(-10deg); -webkit-transform: rotate(-10deg);}
+  44%  {transform: rotate(0deg); -webkit-transform: rotate(0deg);}
+  50%  {transform: rotate(30deg); -webkit-transform: rotate(30deg);}
+  56%  {transform: rotate(-10deg); -webkit-transform: rotate(-10deg);}
+  58%  {transform: rotate(0deg); -webkit-transform: rotate(0deg);}
+  65%  {transform: rotate(30deg); -webkit-transform: rotate(30deg);}
+  85%  {transform: rotate(-10deg); -webkit-transform: rotate(-10deg);}
+  90%  {transform: rotate(10deg); -webkit-transform: rotate(10deg);}
+  100%  {transform: rotate(0deg); -webkit-transform: rotate(0deg);}
+}
+
+#bubbleContainer:active{
+  pointer-events:all; /* only allow hover events on the container */
+}
+
+#bubbleContainer:hover{
+  transform: scale(105%);
+  -webkit-transform: scale(105%);
+}
+
+.speechBubble {
+  width: 20vw;
+  height: 10vw;
+  border: 1px solid black;
+  border-radius: 2vw;
+  background: rgb(238, 236, 236);
+  padding: 2vw;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: normal;
+  font-size: 2vw;
+  color: black;
+  font-family: arial;
+  position:relative;
+}
+
+.speechBubble:before {
+  content: "";
+  width: 0vw;
+  height: 0vw;
+  position: absolute;
+  border-left: 2vw solid rgb(238, 236, 236);
+  border-right: 2vw solid transparent;
+  border-top: 2vw solid rgb(238, 236, 236);
+  border-bottom: 2vw solid transparent;
+  right: -1.9vw;
+  top: 1vw;
+}
+
+
+#operations {
+  display: inline-block;
+  margin-top: 8vw;
+}
+
+#operations {
+  display: block;
+}
+
+#operations  img{
+  width:4vw;
+  height:4vw;
+}
+
+#operations table tr td div{
+  margin:20%;
+  margin-top: 2%;
+}
+
+
+#operations button{
+margin: 0.4vw;
+margin-top: 2%;
+width: 4vw;
+height: 4vw;
+}
+
+.trayPosition {
+  position: fixed;
+  top: 0;
+  width: 9vw;
+  height: 9vw;
+  transform: scale(var(--magnification)) rotateX(var(--rotationX)) rotateY(var(--rotationY)) rotateZ(var(--rotationZ));
+  transition: transform .2s;
+}
+
+.gamearea {
+  justify-content: normal;
+  display: block;
+  position: fixed;
+  user-select: none;
+  text-align: center;
+  /*outline: 1px solid #eee;*/
+  --webkit-transform: translate3d(0,0,0);
+}
+
+.disabledbutton {
+  pointer-events: none;
+  opacity: 0.6;
+  display:none;
+}
+
+.splitbuttonimg {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.boardarea {
+  outline: 1px solid #2f4f4f47;
+  /* background: #eceaea; */
+  background-color: rgba(255, 255, 255, 0.925);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* -webkit-transform: scale3d(); */
+  /* transform-style: preserve-3d; */
+}
+
+/* .gamearea boardarea {
+   transform-style: preserve-3d;
+
+} */
+
+.pieceWrapper {
+  transform: translate(0, 0);
+  -webkit-transform: translate(0, 0);
+  position: fixed;
+  top: 0;
+}
+
+
+.blockedcell {
+background: repeating-linear-gradient(
+45deg,
+rgba(0, 0, 0, 0.2),
+rgba(0, 0, 0, 0.2) 10px,
+rgba(0, 0, 0, 0.3) 10px,
+rgba(0, 0, 0, 0.3) 20px
+)
+}
+
+.piece {
+  position: fixed;
+  top: 0;
+  width: 9vw;
+  height: 9vw;
+  transform: scale(var(--magnification)) rotateX(var(--rotationX)) rotateY(var(--rotationY)) rotateZ(var(--rotationZ));
+  transition: transform .2s;
+  /* transform:rotate(0.0rad); */
+}
+
+.bmAround {
+  pointer-events: none;
+}
+
+.CActionTB {
+  padding-top: 10%;
+  padding-left: 5%;
+}
+
+.CMenuTB {
+  padding-top: 40%;
+  padding-left: 5%;
+}
+
+.CMenuTB img{
+  float: center;
+  width:  4vw;
+  height: 4vw;
+  object-fit: cover;
+  background: rgb(193, 199, 201);
+  border-radius: 25%;
+}
+
+.CMenuTB div{
+background:rgb(141, 160, 157);
+border-radius: 10%;
+border: 0;
+}
+
+.CMenuTB div:active{
+  box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+}
+
+.cGame {
+position: fixed;
+top: 0;
+background: darkgray;
+right: 0;
+bottom: 0;
+left: 0;
+overflow:none;
+/* --webkit-transform: translate3d(0,0,0); */
+}
+
+img#logo{
+position: fixed;
+width: 9.5vw;
+height: 6.5vw;
+background: rgb(197, 207, 203);
+}
+
+/* hint container - can be anything you want */
+.hintPopup {
+  position: relative;
+  margin: 20px;
+  background-color: #fff;
+  padding: 10px;
+  border:red 40px;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin-right:30px !important
+}
+
+/* The actual hint */
+.hintPopup .hintPopupText {
+  visibility: hidden;
+  width: 100px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left:-40px;
+}
+
+/* hint arrow */
+.hintPopup .hintPopupText::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the hint */
+.hintPopup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the hint) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+
+
+
+table
+  {
+   position: relative;
+    margin-top: 30px;
+    width: -10px!important;
+     border-spacing: 0px;
+     border-collapse:collapse;
+     padding: 0px;
+   }
+
+   table tr td{
+      margin:-20px;
+      border-width:0px;
+      margin:0px;
+      width: 10px;
+      padding: 0px;
+   }
+
+
+
+    table tr td button:active {
+      box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+     }
+
+     table tr td div:active {
+      box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+     }
+
+
+  table tr td button{
+    background:rgb(141, 160, 157);
+    border-radius: 10%;
+    border: 0;
+    padding: 0px;
+  }
+
+  #operations table tr td div{
+    background:rgb(141, 160, 157);
+    border-radius: 10%;
+    border: 0;
+    padding: 0.1vw;
+    margin: 0.1vw;
+  }
+
+   table tr td div{
+      background:rgb(141, 160, 157);
+    border-radius: 10%;
+    border: 0;
+    padding: 0px;
+   }
+
+  #logo{
+  height:7vw!important;
+  width:10vw !important
+}
+
+
+@media only screen and (max-width: 1137px) {
+    #operations  img{
+          width:4vw;
+          height:4vw;
+      }
+
+      #operations table tr td div{
+          margin:10px;
+      }
+
+
+      #operations button{
+        margin:0.5vw;
+        margin-top: 1px;
+        width: 4vw;
+        height: 4vw;
+      }
+
+  }
+
+  @media only screen and (max-width: 1137px) {
+    #operations  img{
+          width:4vw;
+          height:4vw;
+      }
+
+      #operations table tr td div{
+          margin:3px;
+        margin-top: 1px;
+      }
+
+
+      #operations button{
+        margin:3px;
+        margin-top: 1px;
+      }
+
+    }
+
+    body {
+      /* Disables pull-to-refresh but allows overscroll flow effects. TODO: Need to check on different screen sizes*/
+      overscroll-behavior-y: contain;
+      -webkit-user-select: none;
+    }
+
+
+    #blink {
+  text-align: center;
+  background: #c6c6c6;
+  color: #fff;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Toggle Split Board */
+.toggleSplitBoard {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.toggleSplitBoard input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+
+/* Style for Button Manipulation */
+.main-wrapper {
+  width: .7vw;
+  height: .1vw;
+  position: relative;
+}
+
+.buttonWrapper {
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transition: transform .2s;
+  z-index: 12 ;
+}
+
+.buttonWrapper.first {
+  height: var(--heightB) ;
+  transform: rotate(var(--buttonRotA));
+  transition: transform .5s;
+}
+
+.buttonWrapper.second {
+  height: var(--heightB) ;
+  transform: rotate(var(--buttonRotB)) ;
+  transition: transform .5s;
+}
+
+.buttonWrapper.third {
+  height: var(--heightB) ;
+  transform: rotate(var(--buttonRotC)) ;
+  transition: transform .5s;
+}
+
+.buttonWrapper.fourth {
+  height: var(--heightB) ;
+  transform: rotate(var(--buttonRotD));
+  transition: transform .5s;
+}
+
+.buttonInside {
+  border-radius: 50%;
+  width: 5vw;
+  height: 5vw;
+  position: absolute;
+  bottom: .5vw;
+  right: .5vw;
+}
+
+.buttonInside.first {
+   background-color: #ff0033;
+}
+
+.buttonInside.second {
+  background-color: #ff0033;
+}
+
+.buttonInside.third {
+  background-color: #ff0033;
+}
+
+.buttonInside.fourth {
+  background-color: #ff0033;
+}
+
+
+.icon-rotateLeft {
+  border-radius: 50%;
+  position: absolute;
+  vertical-align: middle;
+  font-size: 5vw;
+  transform: 0deg;
+  z-index: 12;
+}
+
+.icon-rotateRight {
+  border-radius: 50%;
+  position: absolute;
+  vertical-align: middle;
+  font-size: 5vw;
+  transform: 0deg;
+  z-index: 12;
+}
+
+.icon-flip1 {
+  position: absolute;
+  vertical-align: middle;
+  font-size: 5vw;
+  transform: rotate(var(--rotateH));;
+  z-index: 12;
+}
+
+.icon-flip2 {
+  position: absolute;
+  vertical-align: middle;
+  font-size: 5vw;
+  transform: rotate(var(--rotateV));;
+  z-index: 12;
+}
+/*Button Icon Ref :<a href="http://www.onlinewebfonts.com">oNline Web Fonts</a> */
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?b3zpni');
+  src:  url('fonts/icomoon.eot?b3zpni#iefix') format('embedded-opentype'),
+    /* url('fonts/icomoon.ttf?b3zpni') format('truetype'), */
+    url('fonts/icomoon.woff?b3zpni') format('woff'),
+    url('fonts/icomoon.svg?b3zpni#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-flip1:before {
+  content: "\e902";
+}
+.icon-flip2:before {
+  content: "\e903";
+}
+.icon-flip:before {
+  content: "\e900";
+}
+.icon-flipV:before {
+  content: "\e901";
+}
+.icon-rotateRight:before {
+  content: "\63";
+}
+.icon-rotateLeft:before {
+  content: "\64";
+}
+.icon-setting:before {
+  content: "\66";
+}
+.icon-plus:before {
+  content: "\65";
+}
+
+/* Styling of search bar for seeding */
+
+#seeding {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+  z-index: 99999999999;
+  visibility: hidden;
+}
+
+#seedingCover {
+  position: fixed;
+  background: white;
+  width: 100%;
+  height: 100%;
+  opacity: 80%;
+  z-index: 99999999998;
+  visibility: hidden;
+}
+
+#seedBar {
+  border: 2px solid #999;
+  border-radius: 0.5em;;
+  font-size: 1.2em;
+  width: 10em;
+  transition: width 0.5s ease-in-out;
+}
+
+#seedBar:focus {
+}
+
+
+.FlashOn {
+  display: block;
+  visibility: visible;
+  filter: alpha(opacity=65);
+  opacity: .6;
+}
+
+html {
+	-webkit-text-size-adjust: none;
+	touch-action: manipulation;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+@media screen and (max-width: 860px) {
+
+
+  .TableNameCell .TableDataCell .TableHead{
+    font-size: 0.5em !important
+  }
+}

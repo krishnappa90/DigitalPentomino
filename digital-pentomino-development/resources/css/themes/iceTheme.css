@@ -1,0 +1,47 @@
+#tray {
+    z-index: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10vw;
+    background-color: #021025;
+    display: flex;
+    overflow-x: auto;
+  }
+
+  #field {
+    position: fixed;
+    left: 0vw;
+    top: 10vw;  
+    background: transparent;
+    width: 100%;
+    bottom: 10vw;
+  }
+
+  #playarea {
+    position: fixed;
+    left: 0vw;
+    top: 10vw;
+    bottom: 10vw;
+    width: 100%;
+    background-image: url("../../images/theme/tucaTheme/tucaNightStars.jpg");
+    background-position: top;
+    background-size: cover;
+  }
+  
+  
+
+  #functions_navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10vw;
+    background-color: #021025;
+    display: flex;
+    overflow-x: auto;
+    padding: 2%;
+    padding-left: 2%;
+    padding-right: 2%;
+  }
